@@ -9,6 +9,8 @@ from dash_table import DataTable
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.YETI])
 
+server = app.server
+
 app.layout = html.Div([
     dbc.Row([
         dbc.Col(lg=2),
