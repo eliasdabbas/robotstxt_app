@@ -43,10 +43,7 @@ app.layout = html.Div([
                 dbc.Tab([
                     html.Br(),
                     dcc.Loading([
-                        DataTable(id='robotstxt_table',
-                                  export_format='csv',
-                                  sort_action='native',
-                                  filter_action='native'),
+                        html.Div(id='robotstxt_table'),
                     ])
                 ], label='robots.txt file')
             ]),
@@ -63,6 +60,8 @@ app.layout = html.Div([
 def populate_test_table(n_clicks, robotstxt_url, urls):
     if not n_clicks:
         raise PreventUpdate
+    if not urls:
+        raise PreventUpdate
     robots_df = adv.robotstxt_to_df(robotstxt_url)
     user_agents = (robots_df
                    .query('directive == "User-agent"')
@@ -75,8 +74,7 @@ def populate_test_table(n_clicks, robotstxt_url, urls):
     return test_df.to_dict('records'), columns
 
 
-@app.callback([Output('robotstxt_table', 'data'),
-               Output('robotstxt_table', 'columns')],
+@app.callback([Output('robotstxt_table', 'children')],
               [Input('submit', 'n_clicks')],
               [State('robotstxt_url', 'value')])
 def populate_robotstxt_table(n_clicks, robotstxt_url):
@@ -84,7 +82,14 @@ def populate_robotstxt_table(n_clicks, robotstxt_url):
         raise PreventUpdate
     robots_df = adv.robotstxt_to_df(robotstxt_url)
     columns = [{"name": i, "id": i} for i in robots_df.columns]
-    return robots_df.to_dict('records'), columns
+    table = DataTable(columns=[{"name": i, "id": i} for i in ['directive', 'content', 'robotstxt_url', 'file_downloaded']],
+                      data=robots_df.to_dict('records'),
+                      export_format='csv',
+                      sort_action='native',
+                      filter_action='native',
+                      style_data={'minWidth': '140px'},
+                      style_table={'overflowX': 'auto'}),
+    return table
 
 
 if __name__ == '__main__':
