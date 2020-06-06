@@ -1,9 +1,11 @@
 # robots.txt Tester App
 
-Given a certain robots.txt file, check whether or not any of the provided URLs can be fetched by all the user-agents in the robots.txt file.
+An App for testing URLs and User-agents blocked by robots.txt Files.  
+
+Given a certain robots.txt file, check whether or not any of the provided URLs can be fetched by all the user-agents in the robots.txt file (checks all the combinations).
 
 
-![Check it out](https://www.youtube.com/watch?v=s0Dx0QV9iEs&t=5s)
+[Start testing!](https://www.dashboardom.com/robotstxt)
 
 
-Visual App for Testing URLs and User-agents blocked by robots.txt Files
+
