@@ -6,7 +6,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from dash_table import DataTable
-
+import logging
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.YETI])
 
 server = app.server
@@ -20,7 +20,7 @@ app.layout = html.Div([
                          placeholder='/relative/path\n# OR\nhttps://www.example.com/full/path.html',
                          rows=10),
             html.Br(),
-            dbc.Label('robots.txt file:'),
+            dbc.Label('robots.txt URL:'),
             dbc.Row([
                 dbc.Col([
                     dbc.Input(id='robotstxt_url', type='url'),
@@ -62,12 +62,13 @@ def populate_test_table(n_clicks, robotstxt_url, urls):
         raise PreventUpdate
     if not urls:
         raise PreventUpdate
+
     robots_df = adv.robotstxt_to_df(robotstxt_url)
-    user_agents = (robots_df
-                   .query('directive == "User-agent"')
+    user_agents = (robots_df[robots_df['directive'].str.contains('^user-agent$', case=False)]
                    ['content']
                    .drop_duplicates().tolist())
     urls = [url.strip() for url in urls.split()]
+    logging.log(level=10, msg='@@'.join(urls))
     test_df = adv.robotstxt_test(robotstxt_url, user_agents, urls)
     test_df = test_df.sort_values(['user_agent', 'url_path'])
     columns = [{"name": i, "id": i} for i in test_df.columns]
