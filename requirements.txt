@@ -2,7 +2,7 @@ advertools==0.10.3
 attrs==19.3.0
 Automat==20.2.0
 Brotli==1.0.7
-certifi==2020.4.5.1
+certifi==2022.12.7
 cffi==1.14.0
 chardet==3.0.4
 click==7.1.2
